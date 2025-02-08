@@ -12,3 +12,96 @@ datasource db {
   url      = "file:./dev.db"
   relationMode = "prisma"
 }
+
+
+model User {
+id    String   @default(uuid()) @unique
+username  String @unique
+password String
+name     String
+email   String
+phoneNumber String
+profilePicture   String
+
+
+reviews Review[]
+bookings Booking[]
+}
+
+
+model Review {
+  id    String  @id @default(uuid())
+   rating Int
+   comment String
+   userId String
+   propertyId String
+
+   user User @relation(fields:[userId], references:[id])
+   property Property @relation(fields:[propertyId], references: [id])
+
+   @@index([userId])
+   @@index([propertyId])
+
+}
+
+model  Property {
+  id String @id @default(uuid()) 
+  title String
+  description String
+  location String
+  pricePerNight Float
+  bedroomCount Int
+  bathRoomCount Int
+  maxGuestCount Int
+  rating Int
+
+ hostId        String
+ amenities      Amenity[] // implicit many-to-many
+  reviews        Review[]
+  bookings       Booking[]
+
+  host           Host     @relation(fields: [hostId], references: [id])
+  @@index([hostId])
+}
+
+
+model Booking {
+id String   @id @default(uuid())
+checkinDate DateTime
+checkoutDate DateTime
+numberOfGuests Int
+totalPrice Int
+bookingStatus String
+
+userId  String
+propertyId String
+
+user User @relation(fields:[userId], references:[id])
+property Property @relation(fields:[propertyId], references: [id])
+
+   @@index([userId])
+   @@index([propertyId])
+
+
+}
+
+
+model Host {
+  id String @default(uuid()) @unique
+  username String @unique
+  password String
+  name  String
+  email  String
+  phoneNumber String
+  profilePicture String
+  aboutMe String
+
+  listings Property[]
+}
+
+
+model Amenity {
+  id String @id @default(uuid())
+  name String
+ properties Property[] // implicit many-to-many
+}
