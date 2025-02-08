@@ -4,35 +4,36 @@ import "dotenv/config";
 
 const app = express();
 
-// Sentry
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
   integrations: [
     // enable HTTP calls tracing
-    new Sentry.Integrations.Http({
-      tracing: true,
-    }),
+    new Sentry.Integrations.Http({ tracing: true }),
     // enable Express.js middleware tracing
-    new Sentry.Integrations.Express({
-      app,
-    }),
+    new Sentry.Integrations.Express({ app }),
+    // Automatically instrument Node.js libraries and frameworks
+    ...Sentry.autoDiscoverNodePerformanceMonitoringIntegrations(),
   ],
-  // Performance Monitoring
-  tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!,
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
 });
 
-// Trace incoming requests
+// RequestHandler creates a separate execution context, so that all
+// transactions/spans/breadcrumbs are isolated across requests
 app.use(Sentry.Handlers.requestHandler());
+// TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler());
 
-// Global middleware
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello world!");
 });
-// Trace errors
-// The error handler must be registered before any other error middleware and after all controllers
+
+// The error handler must be before any other error middleware and after all controllers
 app.use(Sentry.Handlers.errorHandler());
 
 app.listen(3000, () => {
