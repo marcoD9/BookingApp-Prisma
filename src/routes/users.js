@@ -4,6 +4,7 @@ import createUser from "../services/users/createUser.js";
 import getUserById from "../services/users/getUserById.js";
 import auth from "../middleware/auth.js";
 import updateUserById from "../services/users/updateUserById.js";
+import deleteUserById from "../services/users/deleteUserById.js";
 
 const router = Router();
 
@@ -70,6 +71,25 @@ router.put("/:id", async (req, res, next) => {
       res
         .status(404)
         .json({ message: `User with id ${id} has not been found` });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await deleteUserById(id);
+    if (user) {
+      res.status(200).send({
+        message: `User with id ${id} has been successfully deleted!`,
+        user,
+      });
+    } else {
+      res
+        .status(404)
+        .json({ message: `User with id ${id} has not been found!` });
     }
   } catch (error) {
     next(error);
