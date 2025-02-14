@@ -8,7 +8,12 @@ const deletePropertyById = async (id) => {
       propertyId: id,
     },
   });
-
+  //Delete the bookings
+  await prisma.booking.deleteMany({
+    where: {
+      propertyId: id,
+    },
+  });
   //Now we can delete the property
   const property = await prisma.property.deleteMany({
     where: { id },
