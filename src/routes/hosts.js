@@ -3,6 +3,7 @@ import getHosts from "../services/hosts/getHosts.js";
 import getHostById from "../services/hosts/getHostById.js";
 import createHost from "../services/hosts/createHost.js";
 import updateHostById from "../services/hosts/updateHostById.js";
+import deleteHostById from "../services/hosts/deleteHostById.js";
 
 const router = Router();
 
@@ -87,6 +88,27 @@ router.put("/:id", async (req, res, next) => {
       res
         .status(404)
         .json({ message: `Host with id ${id} has not been found` });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const host = await deleteHostById(id);
+    if (host) {
+      res
+        .status(200)
+        .send({
+          message: `Host with id ${id} has been successfully deleted!`,
+          host,
+        });
+    } else {
+      res
+        .status(404)
+        .json({ message: `Host with  id ${id} has not been found!` });
     }
   } catch (error) {
     next(error);
