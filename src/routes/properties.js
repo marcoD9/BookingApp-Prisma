@@ -43,8 +43,10 @@ router.post("/", async (req, res, next) => {
       bathRoomCount,
       maxGuestCount,
       hostId,
-      rating,
     } = req.body;
+    if (req.body.rating) {
+      res.status(400).json({ message: `Rating cannot be updated` });
+    }
     const newProperty = await createProperty(
       title,
       description,
@@ -53,8 +55,7 @@ router.post("/", async (req, res, next) => {
       bedroomCount,
       bathRoomCount,
       maxGuestCount,
-      hostId,
-      rating
+      hostId
     );
     res.status(201).json(newProperty);
   } catch (error) {
@@ -72,10 +73,11 @@ router.put("/:id", async (req, res, next) => {
       bedroomCount,
       bathRoomCount,
       maxGuestCount,
-      hostId,
-      rating,
     } = req.body;
     const { id } = req.params;
+    if (req.body.rating || req.body.hostId) {
+      res.status(400).json({ message: `You cannot update these fields!` });
+    }
     const property = await updatePropertyById(id, {
       title,
       description,
@@ -84,9 +86,8 @@ router.put("/:id", async (req, res, next) => {
       bedroomCount,
       bathRoomCount,
       maxGuestCount,
-      hostId,
-      rating,
     });
+
     if (property) {
       res
         .status(200)
@@ -106,12 +107,10 @@ router.delete("/:id", async (req, res, next) => {
     const { id } = req.params;
     const property = await deletePropertyById(id);
     if (property) {
-      res
-        .status(200)
-        .send({
-          message: `Property with id ${id} successfully deleted!`,
-          property,
-        });
+      res.status(200).send({
+        message: `Property with id ${id} successfully deleted!`,
+        property,
+      });
     } else {
       res
         .status(404)
