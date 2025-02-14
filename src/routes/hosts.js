@@ -99,12 +99,10 @@ router.delete("/:id", async (req, res, next) => {
     const { id } = req.params;
     const host = await deleteHostById(id);
     if (host) {
-      res
-        .status(200)
-        .send({
-          message: `Host with id ${id} has been successfully deleted!`,
-          host,
-        });
+      res.status(200).send({
+        message: `Host with id ${id} has been successfully deleted!`,
+        host,
+      });
     } else {
       res
         .status(404)
