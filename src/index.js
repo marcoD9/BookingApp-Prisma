@@ -6,6 +6,7 @@ import propertiesRouter from "./routes/properties.js";
 import hostsRouter from "./routes/hosts.js";
 import amenitiesRouter from "./routes/amenities.js";
 import bookingsRouter from "./routes/bookings.js";
+import reviewsRouter from "./routes/reviews.js";
 import log from "./middleware/logMiddleware.js";
 import "dotenv/config";
 
@@ -47,6 +48,8 @@ app.use("/hosts", hostsRouter);
 app.use("/amenities", amenitiesRouter);
 
 app.use("/bookings", bookingsRouter);
+
+app.use("/reviews", reviewsRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello world!");
