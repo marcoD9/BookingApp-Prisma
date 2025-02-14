@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/node";
 import loginRouter from "./routes/login.js";
 import usersRouter from "./routes/users.js";
 import propertiesRouter from "./routes/properties.js";
+import hostsRouter from "./routes/hosts.js";
 import log from "./middleware/logMiddleware.js";
 import "dotenv/config";
 
@@ -38,6 +39,8 @@ app.use("/login", loginRouter);
 app.use("/users", usersRouter);
 
 app.use("/properties", propertiesRouter);
+
+app.use("/hosts", hostsRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello world!");
