@@ -10,7 +10,17 @@ const router = Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const properties = await getProperties();
+    const { location, pricePerNight, amenities } = req.query;
+
+    //Parsing query parameters
+    const parsedPrice = pricePerNight ? parseFloat(pricePerNight) : undefined; //Parsing price
+    const parsedAmenities = amenities ? amenities.split(",") : undefined; //Parsing amenities
+
+    const properties = await getProperties(
+      location,
+      parsedPrice,
+      parsedAmenities
+    );
     res.json(properties);
   } catch (error) {
     next(error);
