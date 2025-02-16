@@ -65,11 +65,14 @@ router.post("/", auth, async (req, res, next) => {
 router.put("/:id", auth, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { rating, comment } = req.body;
-    if (req.body.userId || req.body.propertyId) {
-      res.status(400).json({ message: `You cannot update these fields!` });
-    }
-    const review = await updateReviewById(id, { rating, comment });
+    const { userId, propertyId, rating, comment } = req.body;
+
+    const review = await updateReviewById(id, {
+      userId,
+      propertyId,
+      rating,
+      comment,
+    });
     if (review) {
       res.status(200).send({
         message: `Review with id ${id} has been successfully updated!`,
