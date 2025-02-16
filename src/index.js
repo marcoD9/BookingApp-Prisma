@@ -9,6 +9,7 @@ import bookingsRouter from "./routes/bookings.js";
 import reviewsRouter from "./routes/reviews.js";
 import log from "./middleware/logMiddleware.js";
 import "dotenv/config";
+import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 
@@ -51,12 +52,10 @@ app.use("/bookings", bookingsRouter);
 
 app.use("/reviews", reviewsRouter);
 
-app.get("/", (req, res) => {
-  res.send("Hello world!");
-});
-
 // The error handler must be before any other error middleware and after all controllers
 app.use(Sentry.Handlers.errorHandler());
+
+app.use(errorHandler);
 
 app.listen(3000, () => {
   console.log("Server is listening on port 3000");
