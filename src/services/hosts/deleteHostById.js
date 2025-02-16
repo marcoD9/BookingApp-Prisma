@@ -2,6 +2,15 @@ import { PrismaClient } from "@prisma/client";
 
 const deleteHostById = async (id) => {
   const prisma = new PrismaClient();
+
+  //If host doesn't exist return null
+  const hostExists = await prisma.host.findUnique({
+    where: { id },
+  });
+  if (!hostExists) {
+    return null;
+  }
+
   // 1. Find host's properties
   const properties = await prisma.property.findMany({
     where: { hostId: id },
