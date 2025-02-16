@@ -36,20 +36,25 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", auth, async (req, res, next) => {
   try {
-    const { userId, propertyId, checkinDate, checkoutDate, numberOfGuests } =
-      req.body;
+    const {
+      userId,
+      propertyId,
+      checkinDate,
+      checkoutDate,
+      numberOfGuests,
+      totalPrice,
+      bookingStatus,
+    } = req.body;
+
     const booking = await createBooking(
       userId,
       propertyId,
       checkinDate,
       checkoutDate,
-      numberOfGuests
+      numberOfGuests,
+      totalPrice,
+      bookingStatus
     );
-    if (req.body.totalPrice || req.body.bookingStatus) {
-      res
-        .status(400)
-        .json({ message: `Total price and booking status cannot be updated!` });
-    }
 
     res.status(201).json(booking);
   } catch (error) {
@@ -59,22 +64,27 @@ router.post("/", auth, async (req, res, next) => {
 
 router.put("/:id", auth, async (req, res, next) => {
   try {
-    const { checkinDate, checkoutDate, numberOfGuests } = req.body;
-    const { id } = req.params;
-    const booking = await updateBookingById(id, {
+    const {
+      userId,
+      propertyId,
       checkinDate,
       checkoutDate,
       numberOfGuests,
+      totalPrice,
+      bookingStatus,
+    } = req.body;
+    const { id } = req.params;
+
+    const booking = await updateBookingById(id, {
+      userId,
+      propertyId,
+      checkinDate,
+      checkoutDate,
+      numberOfGuests,
+      totalPrice,
+      bookingStatus,
     });
 
-    if (
-      req.body.totalPrice ||
-      req.body.bookingStatus ||
-      req.body.userId ||
-      req.body.propertyId
-    ) {
-      res.status(400).json({ message: `You cannot update these fields!` });
-    }
     if (booking) {
       res.status(200).send({
         message: `Booking with id ${id} has been successfully updated!`,
