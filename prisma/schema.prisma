@@ -53,7 +53,7 @@ model  Property {
   bedroomCount Int
   bathRoomCount Int
   maxGuestCount Int
-  rating Int?
+  rating Int
 
  hostId        String
  amenities      Amenity[] // implicit many-to-many
