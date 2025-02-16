@@ -4,6 +4,7 @@ import getBookingByd from "../services/bookings/getBookingById.js";
 import createBooking from "../services/bookings/createBooking.js";
 import updateBookingById from "../services/bookings/updateBookingById.js";
 import deleteBookingById from "../services/bookings/deleteBookingById.js";
+import auth from "../middleware/auth.js";
 
 const router = Router();
 
@@ -32,7 +33,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", auth, async (req, res, next) => {
   try {
     const { userId, propertyId, checkinDate, checkoutDate, numberOfGuests } =
       req.body;
@@ -55,7 +56,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", auth, async (req, res, next) => {
   try {
     const { checkinDate, checkoutDate, numberOfGuests } = req.body;
     const { id } = req.params;
@@ -88,7 +89,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", auth, async (req, res, next) => {
   try {
     const { id } = req.params;
     const booking = await deleteBookingById(id);
