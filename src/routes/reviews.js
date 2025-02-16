@@ -4,6 +4,7 @@ import getReviewById from "../services/reviews/getReviewById.js";
 import deleteReviewById from "../services/reviews/deleteReviewById.js";
 import createReview from "../services/reviews/createReview.js";
 import updateReviewById from "../services/reviews/updateReviewById.js";
+import auth from "../middleware/auth.js";
 
 const router = Router();
 
@@ -32,7 +33,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", auth, async (req, res, next) => {
   try {
     const { id } = req.params;
     const review = await deleteReviewById(id);
@@ -51,7 +52,7 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", auth, async (req, res, next) => {
   try {
     const { userId, propertyId, rating, comment } = req.body;
     const review = await createReview(userId, propertyId, rating, comment);
@@ -61,7 +62,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", auth, async (req, res, next) => {
   try {
     const { id } = req.params;
     const { rating, comment } = req.body;
@@ -70,12 +71,10 @@ router.put("/:id", async (req, res, next) => {
     }
     const review = await updateReviewById(id, { rating, comment });
     if (review) {
-      res
-        .status(200)
-        .send({
-          message: `Review with id ${id} has been successfully updated!`,
-          review,
-        });
+      res.status(200).send({
+        message: `Review with id ${id} has been successfully updated!`,
+        review,
+      });
     } else {
       res
         .status(404)
