@@ -17,7 +17,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", auth, async (req, res, next) => {
   try {
     const { username, password, name, email, phoneNumber, profilePicture } =
       req.body;
@@ -49,7 +49,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", auth, async (req, res, next) => {
   try {
     const { username, password, name, email, phoneNumber, profilePicture } =
       req.body;
@@ -77,7 +77,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", auth, async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await deleteUserById(id);
