@@ -54,10 +54,8 @@ router.post("/", auth, async (req, res, next) => {
       bathRoomCount,
       maxGuestCount,
       hostId,
+      rating,
     } = req.body;
-    if (req.body.rating) {
-      res.status(400).json({ message: `Rating cannot be updated` });
-    }
     const newProperty = await createProperty(
       title,
       description,
@@ -66,7 +64,8 @@ router.post("/", auth, async (req, res, next) => {
       bedroomCount,
       bathRoomCount,
       maxGuestCount,
-      hostId
+      hostId,
+      rating
     );
     res.status(201).json(newProperty);
   } catch (error) {
@@ -84,11 +83,11 @@ router.put("/:id", auth, async (req, res, next) => {
       bedroomCount,
       bathRoomCount,
       maxGuestCount,
+      hostId,
+      rating,
     } = req.body;
     const { id } = req.params;
-    if (req.body.rating || req.body.hostId) {
-      res.status(400).json({ message: `You cannot update these fields!` });
-    }
+
     const property = await updatePropertyById(id, {
       title,
       description,
@@ -97,6 +96,8 @@ router.put("/:id", auth, async (req, res, next) => {
       bedroomCount,
       bathRoomCount,
       maxGuestCount,
+      hostId,
+      rating,
     });
 
     if (property) {
