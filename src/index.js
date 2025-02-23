@@ -12,7 +12,7 @@ import "dotenv/config";
 import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -59,5 +59,5 @@ app.use(Sentry.Handlers.errorHandler());
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`App listening on port ${port}`);
 });
